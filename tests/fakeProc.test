@@ -1,0 +1,22 @@
+#
+# Tests for fakeProc package
+#
+
+# Setup global vars
+set SCRIPTDIR [file dirname [info script]]
+set TARGET_SCRIPTDIR [file normalize [file join $SCRIPTDIR ".."]]
+
+# Source the packages index & load packages
+set dir $TARGET_SCRIPTDIR
+source [file join $TARGET_SCRIPTDIR pkgIndex.tcl]
+unset dir
+
+package require tcltest 2.2
+
+namespace eval ::fakeProc::test {
+    namespace import ::tcltest::*
+    namespace import ::fakeProc::*
+
+    cleanupTests
+}
+namespace delete ::fakeProc::test
