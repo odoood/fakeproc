@@ -1,0 +1,7 @@
+*.[oa]
+*~
+*.sw[po]
+*debug*.*
+data
+debug/
+backup/
