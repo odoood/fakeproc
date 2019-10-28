@@ -12,10 +12,22 @@ source [file join $TARGET_SCRIPTDIR pkgIndex.tcl]
 unset dir
 
 package require tcltest 2.2
+package require fakeProc 1.0
 
 namespace eval ::fakeProc::test {
     namespace import ::tcltest::*
     namespace import ::fakeProc::*
+
+    #
+    # procFake tests
+    #
+    test procFake-1.0 {} -body {
+        procFake {} {} {}
+    } -returnCodes error -result "Name cannot be empty"
+
+    test procFake-1.1 {} -body {
+        procFake "\t  \n" {} {}
+    } -returnCodes error -result "Name cannot be empty"
 
     cleanupTests
 }

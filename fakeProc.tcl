@@ -8,5 +8,9 @@
 #
 package provide fakeProc 1.0
 
-namespace eval ::fakeProc {
+namespace eval fakeProc {
+    namespace export procFake
+}
+
+proc fakeProc::procFake {name args body} {
 }
