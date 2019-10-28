@@ -13,4 +13,9 @@ namespace eval fakeProc {
 }
 
 proc fakeProc::procFake {name args body} {
+
+    set name [string trim $name]
+    if {$name eq {}} {
+        error "Name cannot be empty"
+    }
 }
