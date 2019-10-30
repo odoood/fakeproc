@@ -27,5 +27,15 @@ proc fakeProc::procFake {name args body} {
         error "Name not fully-qualified: '$name'"
     }
 
+    # Check that the command exists
+    if {[namespace which $name] ne $name} {
+
+        # If not found check if namespace exists
+        set nspace [namespace qualifiers $name]
+
+        if {![namespace exists $nspace]} {
+            error "Unknown namespace: '$nspace'"
+        }
+    }
     return
 }
