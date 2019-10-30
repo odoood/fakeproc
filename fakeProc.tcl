@@ -36,6 +36,9 @@ proc fakeProc::procFake {name args body} {
         if {![namespace exists $nspace]} {
             error "Unknown namespace: '$nspace'"
         }
+
+        # If namespace exists error on command name
+        error "Unknown command: '$name'"
     }
     return
 }
