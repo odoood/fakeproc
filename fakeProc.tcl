@@ -18,4 +18,14 @@ proc fakeProc::procFake {name args body} {
     if {$name eq {}} {
         error "Name cannot be empty"
     }
+
+
+
+
+    # Ensure name is fully-qualified (starts with "::")
+    if {[string range $name 0 1] ne "::"} {
+        error "Name not fully-qualified: '$name'"
+    }
+
+    return
 }
