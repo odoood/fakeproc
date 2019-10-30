@@ -45,6 +45,14 @@ namespace eval ::fakeProc::test {
         procFake ::foobar::fooproc {} {}
     } -returnCodes error -result "Unknown namespace: '::foobar'"
 
+    test procFake-2.0 {} -body {
+        procFake ::foobar::fooproc {} {}
+    } -setup {
+        namespace eval ::foobar {}
+    } -cleanup {
+        namespace delete ::foobar
+    } -returnCodes error -result "Unknown command: '::foobar::fooproc'"
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
