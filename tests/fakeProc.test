@@ -41,6 +41,10 @@ namespace eval ::fakeProc::test {
         procFake foobar::fooproc {} {}
     } -returnCodes error -result "Name not fully-qualified: 'foobar::fooproc'"
 
+    test procFake-1.4 {} -body {
+        procFake ::foobar::fooproc {} {}
+    } -returnCodes error -result "Unknown namespace: '::foobar'"
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
