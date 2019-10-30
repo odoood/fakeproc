@@ -29,6 +29,18 @@ namespace eval ::fakeProc::test {
         procFake "\t  \n" {} {}
     } -returnCodes error -result "Name cannot be empty"
 
+    test procFake-1.2 {
+        Force a fully-qualified name, i.e. starts with '::'
+    } -body {
+        procFake fooproc {} {}
+    } -returnCodes error -result "Name not fully-qualified: 'fooproc'"
+
+    test procFake-1.3 {
+        Force a fully-qualified name, i.e. starts with '::'
+    } -body {
+        procFake foobar::fooproc {} {}
+    } -returnCodes error -result "Name not fully-qualified: 'foobar::fooproc'"
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
