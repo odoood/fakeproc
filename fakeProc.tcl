@@ -44,7 +44,16 @@ proc ::fakeProc::procFake {name args body} {
 
     # Move original proc to the backup namespace with a relative name the same
     # as the fully-qualified name
-    rename $name [GetBackupName $name]
+    set backup [GetBackupName $name]
+    rename $name $backup
+
+    # Set the args for the fake to the same as orig if default flag given '*'
+    if {$args eq "*"} {
+        set args [info args $backup]
+    }
+
+    # Create the fake proc
+    proc $name $args {}
 
     return
 }
