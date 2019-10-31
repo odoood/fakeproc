@@ -44,10 +44,15 @@ proc ::fakeProc::procFake {name args body} {
 
     # Move original proc to the backup namespace with a relative name the same
     # as the fully-qualified name
-    set backName $BACKUPNS
-    append backName $name
-
-    rename $name $backName
+    rename $name [GetBackupName $name]
 
     return
+}
+
+
+
+# Get the backup name for a proc (without checking existence)
+proc ::fakeProc::GetBackupName {name} {
+    variable BACKUPNS
+    return $BACKUPNS$name
 }
