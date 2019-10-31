@@ -31,6 +31,9 @@ namespace eval ::fakeProc::test {
         if {[namespace exists $SETUP_NS]} {
             namespace delete $SETUP_NS
         }
+        if {[namespace exists $::fakeProc::BACKUPNS]} {
+            namespace delete $::fakeProc::BACKUPNS
+        }
     }
     #
     # procFake tests
