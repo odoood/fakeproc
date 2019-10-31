@@ -83,6 +83,43 @@ namespace eval ::fakeProc::test {
 
     } -result "::fakeProc::backup$SETUP_PROC_NAME" -cleanup $CLEANUP
 
+    test procFake-4.0 {
+        If the args argument is '*' make all formal args of created fake proc
+        the same as the real proc
+    } -setup $SETUP -body {
+
+        # Set default formal args for target proc
+        proc $SETUP_PROC_NAME {one two andThree} {}
+
+        procFake $SETUP_PROC_NAME {*} {}
+
+        return [info args $SETUP_PROC_NAME]
+
+    } -result {one two andThree} -cleanup $CLEANUP
+
+    test procFake-4.1 {} -body {
+
+        procFake $SETUP_PROC_NAME {foo1 foo2 foo3} {}
+
+        return [info args $SETUP_PROC_NAME]
+
+    } -result {foo1 foo2 foo3} -setup $SETUP -cleanup $CLEANUP
+
+    test procFake-4.2 {
+        If args has formal default values fake proc should preserve them
+    } -body {
+
+        procFake $SETUP_PROC_NAME {foo1 foo2 {foo3 "foobar"}} {}
+
+        set procArgs [info args $SETUP_PROC_NAME]
+
+        # Get the default value specifically with info default & format
+        info default $SETUP_PROC_NAME foo3 defVal
+
+        lset procArgs 2 "foo3 \"$defVal\""
+
+    } -result {foo1 foo2 {foo3 "foobar"}} -setup $SETUP -cleanup $CLEANUP
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
