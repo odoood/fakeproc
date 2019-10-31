@@ -8,11 +8,15 @@
 #
 package provide fakeProc 1.0
 
-namespace eval fakeProc {
+namespace eval ::fakeProc {
     namespace export procFake
+
+    variable BACKUPNS {::fakeProc::backup}
 }
 
-proc fakeProc::procFake {name args body} {
+proc ::fakeProc::procFake {name args body} {
+
+    variable BACKUPNS
 
     set name [string trim $name]
     if {$name eq {}} {
@@ -40,5 +44,13 @@ proc fakeProc::procFake {name args body} {
         # If namespace exists error on command name
         error "Unknown command: '$name'"
     }
+
+    # Move original proc to the backup namespace with a relative name the same
+    # as the fully-qualified name
+    set backName $BACKUPNS
+    append backName $name
+
+    rename $name $backName
+
     return
 }
