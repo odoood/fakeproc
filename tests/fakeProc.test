@@ -53,6 +53,22 @@ namespace eval ::fakeProc::test {
         namespace delete ::foobar
     } -returnCodes error -result "Unknown command: '::foobar::fooproc'"
 
+    test procFake-3.0 {
+        If name is valid then the proc should be added to the backup namespace
+        under fakeProc namespace with the same name path
+    } -setup {
+        namespace eval ::foobar {
+            proc fooproc {} {}
+        }
+    } -body {
+
+        procFake ::foobar::fooproc {} {}
+        return [namespace which {::fakeProc::backup::foobar::fooproc}]
+
+    } -result {::fakeProc::backup::foobar::fooproc} -cleanup {
+        namespace delete ::foobar
+    }
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
