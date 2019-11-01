@@ -121,6 +121,29 @@ namespace eval ::fakeProc::test {
 
     } -result {foo1 foo2 {foo3 "foobar"}} -setup $SETUP -cleanup $CLEANUP
 
+    test procFake-4.3 {
+        If the name does not exist in the namespace but exists in the global \
+        namespace, and args value is '*' make all formal args of fake proc the \
+        same as the global proc
+    } -setup {
+        # Create a dummy global proc
+        proc ::foobarGlobal {fooglo1 fooglo2} {}
+
+        # Create namespace to make fake in
+        namespace eval ::foospace {}
+
+    } -body {
+
+        # Set default formal args for target proc
+        procFake ::foospace::foobarGlobal {*} {}
+
+        return [info args ::foospace::foobarGlobal]
+
+    } -result {fooglo1 fooglo2} -cleanup {
+        namespace delete ::foospace
+        rename ::foobarGlobal {}
+    }
+
     test procFake-5.0 {
         With valid name and body fake proc body always matches
     } -body {
