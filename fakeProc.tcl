@@ -30,6 +30,7 @@ proc ::fakeProc::procFake {name args body} {
 
     # Ensure namespace exists
     set nspace [namespace qualifiers $name]
+    set ntail [namespace tail $name]
 
     if {![namespace exists $nspace]} {
         error "Unknown namespace: '$nspace'"
@@ -47,6 +48,11 @@ proc ::fakeProc::procFake {name args body} {
         if {$args eq "*"} {
             set args [info args $backup]
         }
+
+    } elseif {[namespace which "::$ntail"] ne "" && $args eq "*"} {
+        # If there is a global version of the proc name & args is default flag
+        # copy those args
+        set args [info args "::$ntail"]
     }
 
     # Create the fake proc
