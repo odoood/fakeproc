@@ -64,11 +64,12 @@ namespace eval ::fakeProc::test {
 
     test procFake-2.0 {} -body {
         procFake ::foobar::fooproc {} {}
+        return [namespace which ::foobar::fooproc]
     } -setup {
         namespace eval ::foobar {}
     } -cleanup {
         namespace delete ::foobar
-    } -returnCodes error -result "Unknown command: '::foobar::fooproc'"
+    } -result "::foobar::fooproc"
 
     test procFake-3.0 {
         If name is valid then the proc should be added to the backup namespace
