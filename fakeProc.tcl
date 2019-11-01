@@ -35,22 +35,18 @@ proc ::fakeProc::procFake {name args body} {
         error "Unknown namespace: '$nspace'"
     }
 
-    # Check that the command exists
-    if {[namespace which $name] ne $name} {
+    # If command exists take a backup
+    if {[namespace which $name] eq $name} {
 
+        # Move original proc to the backup namespace with a relative name the same
+        # as the fully-qualified name
+        set backup [GetBackupName $name]
+        rename $name $backup
 
-        # If namespace exists error on command name
-        error "Unknown command: '$name'"
-    }
-
-    # Move original proc to the backup namespace with a relative name the same
-    # as the fully-qualified name
-    set backup [GetBackupName $name]
-    rename $name $backup
-
-    # Set the args for the fake to the same as orig if default flag given '*'
-    if {$args eq "*"} {
-        set args [info args $backup]
+        # Set the args for the fake to the same as orig if default flag given '*'
+        if {$args eq "*"} {
+            set args [info args $backup]
+        }
     }
 
     # Create the fake proc
