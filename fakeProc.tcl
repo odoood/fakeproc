@@ -53,6 +53,8 @@ proc ::fakeProc::procFake {name args body} {
         # If there is a global version of the proc name & args is default flag
         # copy those args
         set args [info args "::$ntail"]
+    } elseif {$args eq "*"} {
+        set args "args"
     }
 
     # Create the fake proc
