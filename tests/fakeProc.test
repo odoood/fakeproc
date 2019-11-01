@@ -120,6 +120,16 @@ namespace eval ::fakeProc::test {
 
     } -result {foo1 foo2 {foo3 "foobar"}} -setup $SETUP -cleanup $CLEANUP
 
+    test procFake-5.0 {
+        With valid name and body fake proc body always matches
+    } -body {
+
+        procFake $SETUP_PROC_NAME {} {puts "This is a fake."}
+
+        return [info body $SETUP_PROC_NAME]
+
+    } -result {puts "This is a fake."} -setup $SETUP -cleanup $CLEANUP
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
