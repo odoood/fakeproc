@@ -154,6 +154,19 @@ namespace eval ::fakeProc::test {
 
     } -result {puts "This is a fake."} -setup $SETUP -cleanup $CLEANUP
 
+    test procFake-5.1 {
+        If the name does not exist in the namespace or in the global namespace,\
+        and args value is '*' make one formal argument "args" to capture all \
+        argument values by default
+    } -setup {namespace eval ::foospace {}} -body {
+
+        # Set default formal args for target proc
+        procFake ::foospace::fooproc {*} {}
+
+        return [info args ::foospace::fooproc]
+
+    } -result {args} -cleanup {namespace delete ::foospace}
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
