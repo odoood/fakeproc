@@ -53,7 +53,7 @@ proc ::fakeProc::procFake {name args body} {
     }
 
     # Create the fake proc
-    proc $name $args {}
+    proc $name $args $body
 
     return
 }
