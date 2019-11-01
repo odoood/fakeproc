@@ -36,25 +36,34 @@ proc ::fakeProc::procFake {name args body} {
         error "Unknown namespace: '$nspace'"
     }
 
+    set useDefArgs [expr {$args eq "*"}]
+    set procSource {}
+
     # If command exists take a backup
     if {[namespace which $name] eq $name} {
 
-        # Move original proc to the backup namespace with a relative name the same
-        # as the fully-qualified name
+        # Move original proc to the backup namespace with a relative name from
+        # the fully-qualified name
         set backup [GetBackupName $name]
+
         rename $name $backup
 
-        # Set the args for the fake to the same as orig if default flag given '*'
-        if {$args eq "*"} {
-            set args [info args $backup]
-        }
+        set procSource $backup
 
-    } elseif {[namespace which "::$ntail"] ne "" && $args eq "*"} {
-        # If there is a global version of the proc name & args is default flag
-        # copy those args
-        set args [info args "::$ntail"]
-    } elseif {$args eq "*"} {
+    } elseif {[namespace which "::$ntail"] ne ""} {
+
+        # If there is a global version of the proc name set that as source
+        set procSource "::$ntail"
+    }
+
+    # Set the default args value according to the source proc
+    if {$useDefArgs} {
+
         set args "args"
+
+        if {$procSource ne {}} {
+            set args [info args $procSource]
+        }
     }
 
     # Create the fake proc
