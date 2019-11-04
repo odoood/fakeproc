@@ -34,6 +34,7 @@ namespace eval ::fakeProc::test {
         if {[namespace exists $::fakeProc::BACKUPNS]} {
             namespace delete $::fakeProc::BACKUPNS
         }
+        set ::fakeProc::FAKED_NAMES {}
     }
     #
     # procFake tests
