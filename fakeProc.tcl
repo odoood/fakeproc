@@ -63,6 +63,18 @@ proc ::fakeProc::procFake {name args body} {
 
         if {$procSource ne {}} {
             set args [info args $procSource]
+
+            # Get the default values and set them in the list of args
+            for {set i 0} {$i < [llength $args]} {incr i} {
+
+                set arg [lindex $args $i]
+
+                # If arg has default value set the item in the list to the form
+                # for default formal arguments
+                if {[info default $procSource $arg defVal]} {
+                    lset args $i [concat $arg $defVal]
+                }
+            }
         }
     }
 
