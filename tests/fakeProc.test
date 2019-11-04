@@ -215,6 +215,24 @@ namespace eval ::fakeProc::test {
         resetProc ::foospace::fooproc
     } -returnCodes error -result "No fake created for '::foospace::fooproc'"
 
+    test resetProc-1.2 {
+        If the name has been faked from an existing proc it will have a backup;\
+        calling resetProc will restore that backup
+    } -body {
+        resetProc $SETUP_PROC_NAME
+        return [concat [info args $SETUP_PROC_NAME] [info body $SETUP_PROC_NAME]]
+    } -result {real1 real2 puts "hi from real."} \
+    -setup {
+
+        eval $SETUP
+
+        # Set specific args on proc to fake
+        proc $SETUP_PROC_NAME {real1 real2} {puts "hi from real."}
+
+        procFake $SETUP_PROC_NAME {fake1 fake2} {puts "hi from fake."}
+
+    } -cleanup $CLEANUP
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
