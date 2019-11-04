@@ -167,6 +167,39 @@ namespace eval ::fakeProc::test {
 
     } -result {args} -cleanup {namespace delete ::foospace}
 
+    test procFake-5.2 {
+        If the name exists only in the global namespace, and args value is '*'\
+        ensure all formal argument defaults are set in fake proc
+    } -setup {
+        # Create a dummy global proc
+        proc ::fooGlo {farg1 {farg2 "foo"} {farg3 "bar"}} {}
+
+        # Create namespace to make fake in
+        namespace eval ::foospace {}
+
+    } -body {
+
+        # Set default formal args for target proc
+        procFake ::foospace::fooGlo {*} {}
+        set formals [info args ::foospace::fooGlo]
+        set defaults {}
+        set defVal {}
+
+        foreach form $formals {
+
+            if {[info default ::foospace::fooGlo $form defVal]} {
+                lappend defaults $defVal
+            }
+        }
+
+        return [concat $formals $defaults]
+
+    } -cleanup {
+        namespace delete ::foospace
+        rename ::fooGlo {}
+        eval $CLEANUP
+    } -result {farg1 farg2 farg3 foo bar}
+
     cleanupTests
 }
 namespace delete ::fakeProc::test
