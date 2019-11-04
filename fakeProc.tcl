@@ -15,6 +15,14 @@ namespace eval ::fakeProc {
 }
 
 proc ::fakeProc::resetProc {name} {
+
+    set name [string trim $name]
+
+    # Ensure name is fully-qualified (starts with "::")
+    if {[string range $name 0 1] ne "::"} {
+        error "Name not fully-qualified: '$name'"
+    }
+
     return
 }
 
