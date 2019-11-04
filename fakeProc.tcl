@@ -27,7 +27,7 @@ proc ::fakeProc::resetProc {name} {
     }
 
     # Ensure name has been faked (check list of names)
-    if {[lsearch -exact $FAKED_NAMES $name] < 0} {
+    if {![IsProcFaked $name]} {
         error "No fake created for '$name'"
     }
 
@@ -110,4 +110,10 @@ proc ::fakeProc::procFake {name args body} {
 proc ::fakeProc::GetBackupName {name} {
     variable BACKUPNS
     return $BACKUPNS$name
+}
+
+# Check whether a name has been faked and is in the list
+proc ::fakeProc::IsProcFaked {name} {
+    variable FAKED_NAMES
+    return [expr {[lsearch -exact $FAKED_NAMES $name] >= 0}]
 }
