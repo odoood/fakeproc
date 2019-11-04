@@ -12,15 +12,23 @@ namespace eval ::fakeProc {
     namespace export procFake resetProc
 
     variable BACKUPNS {::fakeProc::backup}
+    variable FAKED_NAMES {}
 }
 
 proc ::fakeProc::resetProc {name} {
+
+    variable FAKED_NAMES
 
     set name [string trim $name]
 
     # Ensure name is fully-qualified (starts with "::")
     if {[string range $name 0 1] ne "::"} {
         error "Name not fully-qualified: '$name'"
+    }
+
+    # Ensure name has been faked (check list of names)
+    if {[lsearch -exact $FAKED_NAMES $name] < 0} {
+        error "No fake created for '$name'"
     }
 
     return
