@@ -200,6 +200,20 @@ namespace eval ::fakeProc::test {
         eval $CLEANUP
     } -result {farg1 farg2 farg3 foo bar}
 
+    #
+    # resetProc tests
+    #
+
+    test resetProc-1.0 {} -body {
+        resetProc fooproc
+    } -returnCodes error -result "Name not fully-qualified: 'fooproc'"
+
+    test resetProc-1.1 {Regardless of the existence of the named proc, if fake\
+        has not been created (i.e. no call to procFake with name), then error
+    } -body {
+        resetProc ::foospace::fooproc
+    } -returnCodes error -result "No fake created for '::foospace::fooproc'"
+
     cleanupTests
 }
 namespace delete ::fakeProc::test

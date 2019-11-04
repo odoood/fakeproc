@@ -9,9 +9,13 @@
 package provide fakeProc 1.0
 
 namespace eval ::fakeProc {
-    namespace export procFake
+    namespace export procFake resetProc
 
     variable BACKUPNS {::fakeProc::backup}
+}
+
+proc ::fakeProc::resetProc {name} {
+    return
 }
 
 proc ::fakeProc::procFake {name args body} {
