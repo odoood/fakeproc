@@ -9,10 +9,21 @@
 package provide fakeProc 1.0
 
 namespace eval ::fakeProc {
-    namespace export procFake resetProc
+    namespace export procFake resetProc resetAllProcs
 
     variable BACKUPNS {::fakeProc::backup}
     variable FAKED_NAMES {}
+}
+
+# Resets all procs that have been faked
+proc ::fakeProc::resetAllProcs {} {
+    variable FAKED_NAMES
+
+    foreach name $FAKED_NAMES {
+        resetProc $name
+    }
+
+    return
 }
 
 proc ::fakeProc::resetProc {name} {
