@@ -66,6 +66,11 @@ proc ::fakeProc::procFake {name args body} {
         error "Unknown namespace: '$nspace'"
     }
 
+    # Add the proc name to the faked names list
+    if {![IsProcFaked $name]} {
+        lappend FAKED_NAMES $name
+    }
+
     set useDefArgs [expr {$args eq "*"}]
     set procSource {}
 
@@ -79,11 +84,6 @@ proc ::fakeProc::procFake {name args body} {
         rename $name $backup
 
         set procSource $backup
-
-        # Add the proc name to the faked names list
-        if {![IsProcFaked $name]} {
-            lappend FAKED_NAMES $name
-        }
 
     } elseif {[namespace which "::$ntail"] ne ""} {
 
