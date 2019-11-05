@@ -31,12 +31,22 @@ proc ::fakeProc::resetProc {name} {
         error "No fake created for '$name'"
     }
 
+    # Restore backup (if it exists, otherwise delete target)
+    set backup [namespace which [GetBackupName $name]]
+
+    rename $name {}
+
+    if {$backup ne ""} {
+        rename $backup $name
+    }
+
     return
 }
 
 proc ::fakeProc::procFake {name args body} {
 
     variable BACKUPNS
+    variable FAKED_NAMES
 
     set name [string trim $name]
     if {$name eq {}} {
@@ -70,11 +80,17 @@ proc ::fakeProc::procFake {name args body} {
 
         set procSource $backup
 
+        # Add the proc name to the faked names list
+        if {![IsProcFaked $name]} {
+            lappend FAKED_NAMES $name
+        }
+
     } elseif {[namespace which "::$ntail"] ne ""} {
 
         # If there is a global version of the proc name set that as source
         set procSource "::$ntail"
     }
+
 
     # Set the default args value according to the source proc
     if {$useDefArgs} {
