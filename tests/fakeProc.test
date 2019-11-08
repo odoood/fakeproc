@@ -72,6 +72,35 @@ namespace eval ::fakeProc::test {
         namespace delete ::foobar
     } -result "::foobar::fooproc"
 
+    test procFake-2.1 {
+        If the name to fake does not exist in the specified namespace, but does\
+        exist as a command in the global, and is also NOT a proc (i.e. is a cmd\
+        in standard TCL library written in C), the fake will be created as if \
+        name does not exist anywhere
+    } -body {
+        procFake ::foobar::puts {} {}
+        return [namespace which ::foobar::puts]
+    } -setup {
+        namespace eval ::foobar {}
+    } -cleanup {
+        namespace delete ::foobar
+    } -result "::foobar::puts"
+
+    test procFake-2.2 {
+        If the name to fake:
+        - does not exist in the target namespace, but exist as global command
+        - is also NOT a proc (i.e. is standard TCL library command written in C)
+        - and args value is '*'
+        then set one formal argument "args" to capture all arg values by default
+    } -body {
+        procFake ::foobar::puts {*} {}
+        return [info args ::foobar::puts]
+    } -setup {
+        namespace eval ::foobar {}
+    } -cleanup {
+        namespace delete ::foobar
+    } -result {args}
+
     test procFake-3.0 {
         If name is valid then the proc should be added to the backup namespace
         under fakeProc namespace with the same name path
