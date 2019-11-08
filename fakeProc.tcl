@@ -51,6 +51,10 @@ proc ::fakeProc::resetProc {name} {
         rename $backup $name
     }
 
+    # Remove name from list
+    set i [lsearch -exact $FAKED_NAMES $name]
+    set FAKED_NAMES [lreplace $FAKED_NAMES $i $i]
+
     return
 }
 
@@ -71,7 +75,7 @@ proc ::fakeProc::procFake {name args body} {
 
     # Ensure namespace exists
     set nspace [namespace qualifiers $name]
-    set ntail [namespace tail $name]
+    set tail [namespace tail $name]
 
     if {![namespace exists $nspace]} {
         error "Unknown namespace: '$nspace'"
@@ -96,10 +100,11 @@ proc ::fakeProc::procFake {name args body} {
 
         set procSource $backup
 
-    } elseif {[namespace which "::$ntail"] ne ""} {
+    } elseif {[namespace which ::$tail] ne "" && [info procs ::$tail] ne ""} {
 
-        # If there is a global version of the proc name set that as source
-        set procSource "::$ntail"
+        # If there is a global version of the name, and it is a proc (not a std
+        # Tcl command written in C) set that as source
+        set procSource ::$tail
     }
 
 
